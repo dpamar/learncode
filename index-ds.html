@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<title>Disjoint sets JS implementation</title>
+		<script src="disjointsets.js"></script>
+		<script src="arraylists.js"></script>
+		<script src="random.js"></script>
+		<script>
+function runBoth() {
+	var size = parseInt(document.getElementById("size").value);
+	if(isNaN(size) || size < 2 || size > 10000000) size = 1000000;
+
+	var result = '';
+	if(size <= 50000 ||
+		confirm(`Warning : arraylist implementation can be very long for size above 50k.
+Continue?`)) 
+		result = `Total : <ul>${run_ds(size)}${run_lists(size)}</ul>`;
+	else
+		result = `Total : <ul>${run_ds(size)}</ul>`;
+	document.getElementById('result').innerHTML = result;
+}
+
+function runDsOnly() {
+	var size = parseInt(document.getElementById("size").value);
+	if(isNaN(size) || size < 2 || size > 10000000) size = 1000000;
+
+	var result = `Total : <ul>${run_ds(size)}</ul>`;
+	document.getElementById('result').innerHTML = result;
+}
+
+function run_ds(size) {
+	var ds = new DisjointSets(size);
+	return run('Disjoint sets', ds, size);
+}
+
+function run_lists(size) {
+	var lists = new ArrayListSets(size);
+	return run('Arraylists', lists, size);
+}
+
+function run(implName, impl, size) {
+	var iterationCount = 0;
+	var random = new Random(size);
+	var start = new Date();
+	for(var iterationCount = 0; impl.getClassWeight(0) < size; iterationCount++)
+		impl.addLink( random.getNext(), random.getNext());
+	var end = new Date();
+	return `<li>Using ${implName} : ${iterationCount} iterations, in ${end-start} milliseconds, ${Math.floor(iterationCount/(end-start))} iterations/ms</li>`;
+}
+		</script>
+	</head>
+	<body>
+		<p>
+			Add random links to a population until you reach a unique class
+			<br/>
+			Size : <input type="text" id="size" value="1000"/>
+			<br/>
+			<input type="button" value="Run using disjoint sets only" onclick="runDsOnly();"/>
+			<input type="button" value="Compare disjoint sets and class pointers implementations" onclick="runBoth();"/>
+			<br/>
+			<br/>
+			<div id="result"></div>
+		</p>
+	</body>
+</html>
