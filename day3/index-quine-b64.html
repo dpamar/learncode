@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<title>A Javascript quine</title>
+		<script>
+function format(str) {
+	return [[/\n( *)/g, (m,n) => '<br/>' + '&nbsp;'.repeat(n.length)],
+		[/  +/g, m => '&nbsp;'.repeat(m.length)]
+	].reduce((a,b) => a.replace(b[0], b[1]), str);
+}
+
+function run() {
+	var code = document.getElementById('quine').value;
+
+	var split = code.indexOf('#####');
+	
+	var head = code.substr(0, split);
+	var data = code.substr(split+5);
+
+	code = head + btoa(data).replace(/(?=(.{30})+$)/g,' ') + data;
+	document.getElementById('source').innerHTML = format(code);
+	
+	var result = eval(code);
+	document.getElementById('result').innerHTML = format(result);
+
+	var compare = document.getElementById('compare');
+	if(code == result) {
+		compare.style.borderStyle = 'solid';
+		compare.style.borderColor = 'limegreen';
+		compare.style.borderWeight = '2px;'
+		compare.style.color = 'midnightBlue';
+		compare.innerHTML = 'MATCH !';
+	} else {
+		compare.style.borderStyle = 'solid';
+		compare.style.borderColor = 'tomato';
+		compare.style.borderWeight = '2px;'
+		compare.style.color = 'crimson';
+		compare.innerHTML = 'MISMATCH !';
+	}
+}
+		</script>
+	</head>
+	<body>
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 33%">Quine code</td>
+				<td style="width: 33%">Executed code</td>
+				<td style="width: 33%">Execution result</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td rowspan="2">
+					<textarea id="quine" style="width: 100%; height: 500px">(function(){
+  var data = '#####';
+  var result = '(function(){\n  var data = \'';
+  result += data;
+  result += atob(data);
+  return result;
+})()</textarea>
+					<br/>
+					<input type="button" value="Execute quine" onclick="run()"/>
+				</td>
+				<td id="source" style="vertical-align: top;"></td>
+				<td id="result" style="vertical-align: top;"></td>
+			</tr>
+			<tr>
+				<td colspan="2"><div style="width: 100%; height: 20px; text-align: center; vertical-align: middle;" id="compare"></div></td>
+		</table>
+	</body>
+</html>
