@@ -1,0 +1,26 @@
+<html>
+
+<head>
+    <title>Gesture recognition</title>
+    <script src="gesture.js"></script>
+    <script src="record.js"></script>
+</head>
+
+<body onload="AskFor(0);">
+    <table>
+        <tr>
+            <td style="width:500; height:500">
+                <div id="drawingZone">
+                    <div style="background-color:#FF0000; width:500; height:500;" onmousedown="StartRecordStroke();" onmousemove="RecordStroke(event);" onmouseup="StopRecordStroke();">&nbsp;</div>
+                </div>
+            </td>
+            <td style="width:300;">
+                <div id="setup">
+                </div>
+                <div id="results"></div>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
