@@ -1,0 +1,128 @@
+<html>
+	<head>
+		<title>Kruskal JS implementation</title>
+		<script src="disjointsets.js"></script>
+		<script>
+function run() {
+	var connections = document.getElementById('connections').value.split('\n').map(x => x.split(' '));
+	
+	var nodeNames = [];
+	connections.map(x => {
+		if(nodeNames.indexOf(x[0]) == -1) nodeNames.push(x[0]);
+		if(nodeNames.indexOf(x[1]) == -1) nodeNames.push(x[0]);
+	});
+	
+	var ds = new DisjointSets(nodeNames.length);
+	var result = connections.sort((a,b) => a[2] - b[2]).filter( x => {
+		var id1 = nodeNames.indexOf(x[0]);
+		var id2 = nodeNames.indexOf(x[1]);
+		if(ds.getClass (id1) == ds.getClass (id2)) return false;
+		ds.addLink(id1, id2);
+		return true;
+	});
+	
+	document.getElementById('results').innerHTML = `Total: ${result.reduce((a,b) => a + +b[2],0)} instead of ${connections.reduce((a,b) => a + +b[2],0)}<br/>`;
+	document.getElementById('results').innerHTML += result.map(x => x.join(' ')).join('<br/>');
+}
+		</script>
+	</head>
+	<body>
+		<p>
+			Describe graph ([source] [target] [weight], one per line)
+			<br/>
+			<textarea id="connections" style="width: 500px; height: 400px;">lisboa cadiz 2
+lisboa madrid 3
+cadiz madrid 3
+madrid barcelona 2
+madrid pampelona 3
+pampelona barcelona 2
+pampelona brest 4
+pampelona paris 4
+brest paris 3
+brest dieppe 2
+paris dieppe 1
+dieppe london 2
+london edingburgh 4
+london amsterdam 2
+dieppe bruxelles 2
+pampelona marseille 4
+barcelona marseille 4
+marseille paris 4
+paris bruxelles 2
+bruxelles amsterdam 1
+amsterdam essen 3
+amsterdam frankfurt 2
+bruxelles frankfurt 2
+paris frankfurt 3
+paris zurich 3
+marseille zurich 2
+frankfurt essen 2
+essen kopenhagen 3
+kopenhagen stockholm 3
+stockholm petrograd 8
+essen berlin 2
+frankfurt berlin 3
+frankfurt munchen 2
+zurich munchen 2
+zurich venezia 2
+marseille roma 4
+roma venezia 2
+venezia munchen 2
+munchen wien 3
+wien berlin 3
+venezia zagrab 2
+zagrab wien 2
+berlin danzig 4
+danzig warsawa 2
+berlin warsawa 4
+wien warsawa 4
+warsawa wilno 3
+wilno kyev 2
+warsawa kyev 4
+danzig riga 4
+riga petrograd 4
+riga wilno 4
+petrograd moscow 4
+wilno smolensk 3
+smolensk moscow 2
+kyev smolensk 3
+wien budapest 1
+budapest kyev 6
+moscow karkov 4
+kyev karkov 4
+zagrab budapest 2
+kyev bucarest 4
+budapest bucarest 4
+budapest sarajevo 3
+zagrab sarajevo 3
+karkov rostov 2
+rostov sebastopol 4
+bucarest sebastopol 4
+rostov sochi 2
+sebastopol sochi 2
+sarajevo sofia 2
+sofia bucarest 2
+bucarest constantinople 3
+sofia constantinople 3
+sofia athena 3
+athena sarajevo 4
+roma brindisi 2
+roma palermo 4
+brindisi palermo 3
+brindisi athena 4
+athena smyrne 2
+palermo smyrne 6
+smyrne angora 3
+smyrne constantinople 2
+constantinople angora 2
+constantinople sebastopol 4
+sochi erzurum 3
+erzurum sebastopol 4
+erzurum angora 3</textarea>
+			<br/>
+			<input type="button" value="Minimum spanning tree" onclick="run();"/>
+			<br/>
+			<div id="results"></div>
+		</p>
+	</body>
+</html>
