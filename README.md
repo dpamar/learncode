@@ -12,3 +12,11 @@ Try to recognize digits, not using shape recognition (like SIFT, or advanced ML 
 
 ### The demo
 [Give a try](https://dpamar.github.io/learncode/day2/index-gesture.html)
+
+## Day 3 - Quines
+### The problem
+Code a quine, a program able to return its own source code.
+
+### The demo
+[Give a try to the verbose implementation](https://dpamar.github.io/learncode/day3/index-quine-array.html) or [the compact one](https://dpamar.github.io/learncode/day3/index-quine-array.html)
+
