@@ -1,0 +1,170 @@
+<html>
+	<head>
+		<title>Markov chain JS implementation</title>
+		<style>
+td {
+	border: solid black 1px;
+	text-align: center;
+}
+.head {
+	width: 140px;
+	vertical-align: top;
+}
+		</style>
+		<script src="matrix.js"></script>
+		<script src="markov.js"></script>
+		<script>
+var markov = null;
+var stateNames = null;
+
+function start() {
+	var size = parseInt(document.getElementById('size').value);
+	if(isNaN(size) || size < 1) {
+		alert('Invalid size');
+		return;
+	}
+
+	markov = new Markov(size);
+
+	var tableCode = ['<tr><td style="width: 150px; height: 60px;"><p style="text-align: right;">To&nbsp;</p>From</td>'];
+	stateNames = [];
+
+	for(var i=0; i<markov.getSize(); i++) {
+		var name = `State ${i+1}`;
+		stateNames.push(name);
+		tableCode.push(`<td id="head${i}" class="head">${name}</td>`);
+	}
+	tableCode.push('<td class="head">Initial probability</td><td class="head" id="final">Final state</td></tr>');
+
+	for(var i=0; i<markov.getSize(); i++) {
+		var name = stateNames[i];
+		tableCode.push(`<tr><td><input id="name${i}" type="text" value="${name}" onchange="changeName(this.value, ${i})"/></td>`);
+
+		for(var j=0; j<markov.getSize(); j++) {
+			tableCode.push(`<td><input id="from${i}to${j}" type="text" value="0" style="text-align: right" onchange="changeValue(${i}, ${j}, this.value)"/>%</td>`);
+		}
+		tableCode.push(`<td><input id="initial${i}" type="text" value="0" style="text-align: right"/>%</td><td><input id="final${i}" disabled="disabled" type="text" value="0" style="text-align: right"/>%</td></tr>`);
+	}
+
+	document.getElementById('matrixTable').innerHTML = tableCode.join('\n');
+}
+
+function changeName(newName, index) {
+	stateNames[index] = newName;
+	document.getElementById(`head${index}`).innerText = newName;
+	document.getElementById(`name${index}`).value = newName;
+}
+
+function changeValue(row, col, newValue) {
+	var value = Math.round(parseInt(newValue));
+	if(!isNaN(value) && value >= 0 && value <= 100) markov.setProbability(row, col, value/100);
+	document.getElementById(`from${row}to${col}`).value = Math.round(markov.getProbability(row, col)*100);
+}
+
+function validate() {
+
+	var initialSum = 0;
+
+	for(var i=0; i<markov.getSize(); i++) {
+		for(var j=0; j<markov.getSize(); j++) {
+			document.getElementById(`from${j}to${i}`).style.backgroundColor='white';
+		}
+		var initial = document.getElementById(`initial${i}`);
+		initial.style.backgroundColor='white';
+		var value = Math.round(parseInt(initial.value));
+		if(isNaN(value) || value < 0 || value > 100) value = 0;
+		initial.value = value;
+		initialSum += value;
+	}
+
+	if(initialSum != 100) {
+		for(var i=0; i<markov.getSize(); i++) {
+			document.getElementById(`initial${i}`).style.backgroundColor='red';
+		}
+	}
+
+	var errors = markov.validateMatrix();
+	if(errors.length == 0) return;
+
+	errors.map(error => {
+		var total = Math.round(error[1]*100);
+		var index = error[0];
+		var name = stateNames[index];
+		if(total < 100 && confirm(`Not enough probabilities from state ${name} (${100-total}% missing). Add this to transition ${name} => ${name} ?`)) {
+			changeValue(index, index, markov.getProbability(index, index) * 100 + 100 - total);
+		} else {
+			for(var i=0; i<markov.getSize(); i++) document.getElementById(`from${index}to${i}`).style.backgroundColor='red';
+		}
+	});
+}
+
+function predict() {
+
+	var vector = [];
+	for(var i=0; i<markov.getSize(); i++) {
+		var initial = document.getElementById(`initial${i}`);
+		var value = Math.round(parseInt(initial.value));
+		if(isNaN(value) || value < 0 || value > 100) value = 0;
+		initial.value = value;
+		vector.push(value);
+	}
+
+	var iterations = Math.round(parseInt(document.getElementById('iterations').value));
+	if(isNaN(iterations) || iterations <= 0) return;
+
+	var result = markov.predict(iterations, vector);
+	result.map((value, index) => document.getElementById(`final${index}`).value = Math.round(value));
+}
+
+function converge() {
+	var res = markov.testConvergence(1000, 0.000001);
+	if(res == null) {
+		alert('Probably divergent');
+		return;
+	}
+	res.map((value, index) => document.getElementById(`final${index}`).value = Math.round(value[0]*100));
+}
+
+function init() {
+	start();
+	changeName('Eat', 0);
+	changeName('Play', 1);
+	changeName('Code', 2);
+	changeName('Sleep', 3);
+
+	changeValue(0, 1, 20);
+	changeValue(0, 2, 50);
+	changeValue(0, 3, 30);
+	
+	changeValue(1, 0, 10);
+	changeValue(1, 1, 40);
+	changeValue(1, 2, 50);
+	
+	changeValue(2, 0, 10);
+	changeValue(2, 1, 10);
+	changeValue(2, 2, 80);
+	
+	changeValue(3, 0, 50);
+	changeValue(3, 2, 30);
+	changeValue(3, 3, 20);
+
+	document.getElementById('initial0').value = 100;
+}
+
+		</script>
+	</head>
+	<body onload="init();"/>
+		Indicate number of states :
+		<input type="text" style="text-align: right;" value="4" id="size"/>
+		<input type="button" value="Start new simulation" onclick="start()"/>
+		<input type="button" value="Validate matrix" onclick="validate()"/>
+		<hr/>
+		<table id="matrixTable" style="border-spacing : 0; border-collapse : collapse;">
+		</table>
+		<hr/>
+		Indicate number of iterations :
+		<input type="text" style="text-align: right;" value="100" id="iterations"/>
+		<input type="button" value="Predict future !" onclick="predict()"/>
+		<input type="button" value="Test convergence!" onclick="converge()"/>
+	</body>
+</html>
