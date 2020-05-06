@@ -23,17 +23,35 @@ function compute() {
 	for(var i=0; i<120; ) {
 		result.push(convergence[i++] + convergence[i++] + convergence[i++]);
 	}
-	document.getElementById('results').innerHTML = result.map(
+	
+	document.getElementById('probabilities').innerHTML = result.map(
 		(probability, index) => [index, probability]
 	).sort(
 		(a,b) => b[1]-a[1]
 	).map(
 		x => `<tr><td>${names[x[0]]}</td><td>${(x[1]*100).toFixed(2)} %</td></tr>`
 	).join('\n');
+	
+	document.getElementById('roi').innerHTML = result.map(
+		(probability, index) => [index, probability * loyers[index]]
+	).sort(
+		(a,b) => b[1]-a[1]
+	).map(
+		x => `<tr><td>${names[x[0]]}</td><td>${x[1].toFixed(2)} F</td></tr>`
+	).join('\n');
 }
 		</script>
 	</head>
 	<body onload="compute();">
-		<table id="results" style="border-spacing : 0; border-collapse : collapse;"></table>
+		<table cellspacing="60px">
+			<tr><td style="border: none">Probabilité</td><td style="border: none">Rentabilité</td></tr>
+			<tr>
+				<td>
+					<table id="probabilities" style="border-spacing : 0; border-collapse : collapse;"></table>
+				</td>
+				<td>
+					<table id="roi" style="border-spacing : 0; border-collapse : collapse;"></table>
+				</td>
+			</tr>
 	</body>
 </html>
