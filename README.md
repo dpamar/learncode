@@ -25,5 +25,5 @@ Code a quine, a program able to return its own source code.
 Predict the future, and optimize your Monopoly strategy
 
 ### The demo
-[Give a try](https://dpamar.github.io/learncode/day5/index-markov.html) or [have a look at Monopoly strategy](https://dpamar.github.io/learncode/day5/index-monopoly.html)
+[Give a try](https://dpamar.github.io/learncode/day4/index-markov.html) or [have a look at Monopoly strategy](https://dpamar.github.io/learncode/day4/index-monopoly.html)
 
