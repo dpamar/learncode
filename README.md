@@ -11,7 +11,7 @@ The problem itself is fairly simple : given a list of individuals and a list of 
 Try to recognize digits, not using shape recognition (like SIFT, or advanced ML techniques), but using gesture recognition. Simple and efficient
 
 ### The demo
-[Give a try](https://dpamar.github.io/learncode/day2/index-gesture.html)
+[Give a try](https://dpamar.github.io/learncode/day2/index-gesture.html) and also to [the preconfigured version](https://dpamar.github.io/learncode/day2/index-preconfigured.html)
 
 ## Day 3 - Quines
 ### The problem
@@ -19,4 +19,11 @@ Code a quine, a program able to return its own source code.
 
 ### The demo
 [Give a try to the verbose implementation](https://dpamar.github.io/learncode/day3/index-quine-array.html) or [the compact one](https://dpamar.github.io/learncode/day3/index-quine-array.html)
+
+## Day 4 - Markov chains
+### The problem
+Predict the future, and optimize your Monopoly strategy
+
+### The demo
+[Give a try](https://dpamar.github.io/learncode/day5/index-markov.html) or [have a look at Monopoly strategy](https://dpamar.github.io/learncode/day5/index-monopoly.html)
 
