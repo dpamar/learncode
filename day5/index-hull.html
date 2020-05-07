@@ -58,8 +58,8 @@ function findHalf(getX, getY) {
 	firstPoint = null;
 	for(var i=0; i<points.length; i++) {
 		if(min < getX(points[i])) continue;
-		//Ex aequo : pick the highest one
-		if(min == getX(points[i]) && getY(points[i]) <= getY(firstPoint)) continue;
+		//Ex aequo : pick the lowest one
+		if(min == getX(points[i]) && getY(points[i]) >= getY(firstPoint)) continue;
 		firstPoint = points[i];
 		min = getX(firstPoint);
 	}
@@ -85,7 +85,7 @@ function findHalf(getX, getY) {
 			//Ex aequo : pick the closest one
 			if(currentSlope == minSlope && nextPoint) {
 				var d1 = (getX(lastPoint)-getX(nextPoint))**2 + (getY(lastPoint)-getY(nextPoint))**2;
-				var d1 = (getX(lastPoint)-getX(currentPoint))**2 + (getY(lastPoint)-getY(currentPoint))**2;
+				var d2 = (getX(lastPoint)-getX(currentPoint))**2 + (getY(lastPoint)-getY(currentPoint))**2;
 				if(d1 <= d2) continue;
 			}
 			minSlope = currentSlope;
