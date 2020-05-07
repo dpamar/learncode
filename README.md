@@ -27,3 +27,11 @@ Predict the future, and optimize your Monopoly strategy
 ### The demo
 [Give a try](https://dpamar.github.io/learncode/day4/index-markov.html) or [have a look at Monopoly strategy](https://dpamar.github.io/learncode/day4/index-monopoly.html)
 
+## Day 5 - Convex hull
+### The problem
+Compute the convex envelope, the smallest convex set containing a cloud of points
+
+### The demo
+[Give a try](https://dpamar.github.io/learncode/day5/index-hull.html)
+
+
