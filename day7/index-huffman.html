@@ -1,0 +1,102 @@
+<html>
+	<head>
+		<title>Morse code revisisted: Huffman trees</title>
+		<style>
+.mainCol {
+	width: 33%;
+	vertical-align: top;
+}
+
+textarea {
+	width: 100%;
+	height: 250px;
+}
+		</style>
+		<script src="huffman.js"></script>
+		<script>
+var encoding = null;
+var map = null;
+var reverse = null;
+function generate() {
+	var text = document.getElementById('textsample').value;
+	text = text.toUpperCase().replace(/[^A-Z0-9 ]/g,'');
+
+	var freq = getStatistics(text);
+
+	var tree = new HuffmanTree(freq);
+	encoding = [];
+	var stack = [[tree,'']];
+	while(stack.length != 0) {
+		var [node, code] = stack.pop();
+		if(node.chr == null) {
+			stack.push([node.left, code + '.']);
+			stack.push([node.right, code + '-']);
+		} else {
+			encoding.push([node.chr, code]);
+		}
+	}
+	encoding.sort((a,b)=>a[0] < b[0] ? -1 : a[0] == b[0] ? 0 : 1);
+	map = {};
+	reverse = {};
+	encoding.map(x => {
+		map[x[0]] = x[1];
+		reverse[x[1]] = x[0];
+	});
+	displayEncoding();
+}
+
+function displayEncoding() {
+	document.getElementById('results').innerHTML =
+		encoding.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td></tr>`).join('\n');
+}
+
+function encode(text) {
+	if(encoding == null) return;
+
+	var clear = document.getElementById('cleartext').value.toUpperCase();
+	document.getElementById('cleartext').value = clear;
+	var encoded = [...clear].map(c => map[c] || '').join('');
+	document.getElementById('encoded').value = encoded;
+	
+	var decoded = '';
+	for(var i=0, token = ''; i<encoded.length; i++) {
+		token += encoded[i];
+		if(reverse[token] == null) continue;
+		decoded += reverse[token];
+		token = '';
+	}
+	document.getElementById('decoded').value = decoded;
+}
+		</script>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<td class="mainCol">
+					Enter reference text here (to analyze frequences)
+					<br/>
+					<textarea style="height: 800px;" id="textsample"></textarea>
+					<br/>
+					<input type="button" value="Generate encoding" onclick="generate();"/>
+				</td>
+				<td class="mainCol">
+					<table id="results"></table>
+				</td>
+				<td class="mainCol">
+					Enter some text to translate using generated encoding
+					<br/>
+					<textarea id="cleartext" onkeyup="encode(this.value)"></textarea>
+					<br/>
+					Encoded text
+					<br/>
+					<textarea id="encoded" disabled></textarea>
+					<br/>
+					Decoded text
+					<br/>
+					<textarea id="decoded" disabled></textarea>
+					<br/>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
