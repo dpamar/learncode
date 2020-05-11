@@ -1,0 +1,109 @@
+<html>
+    <head>
+	    <title>Simplex JS implementation</title>
+		<style>
+td {
+	width: 60px;
+	text-align: right;
+}
+table {
+	border-spacing : 0;
+	border-collapse : collapse;
+}
+		</style>
+		<script src="simplex.js"></script>
+		<script>
+var simplex;
+function run(anim) {
+	var varCount = parseInt(document.getElementById('varcount').value);
+	if(isNaN(varCount)) return;
+	
+	simplex = new Simplex(varCount);
+	var description = document.getElementById('constraints').value.split('\n');
+	description.map(x => parseConstraint(x, varCount)).filter(x=>x != null).map(x=>simplex.addConstraint(x));
+	description.map(x => simplex.parseObjective(x));
+	
+	simplex.buildMatrix();
+	
+	if(anim)
+		setTimeout(processNextStep, 1000);
+}
+
+function processNextStep() {
+	document.getElementById('matrix').innerHTML = simplex.matrix.map((x,i)=>`<tr>${x.map((y,j)=>`<td id="cell_${i}_${j}">${y}</td>`).join('')}</tr>`).join('');
+	var pivot = simplex.findPivot();
+	if(pivot == null) return showResults();
+	
+	for(var i=0; i<=simplex.constraints.length; i++) {
+		document.getElementById(`cell_${i}_${pivot[1]}`).style.backgroundColor = 'yellow';
+	}
+	setTimeout(`showPivotRow(${pivot[0]}, ${pivot[1]})`, 500);
+}
+
+function showPivotRow(row, col) {
+	for(var j=0; j<=simplex.totalVariableCount; j++) {
+		document.getElementById(`cell_${row}_${j}`).style.backgroundColor = 'orange';
+	}
+	document.getElementById(`cell_${row}_${col}`).style.backgroundColor = 'gold';
+    simplex.nextStep();
+	setTimeout(processNextStep, 1000);
+}
+
+function showResults() {
+	document.getElementById('results').innerHTML = 
+	   simplex.getResults().map((value, index) =>
+		`<tr>
+  <td style="width: 150px">${index < simplex.variableCount ? 'Variable' : 'Slack variable'} X${index+1}</td>
+  <td style="width: 50px">${value}</td>
+</tr>`).join('\n');
+}
+		</script>
+	</head>
+	<body onload="run(true)">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 40%; text-align: left;">
+					Enter number of variables : <input type="text" id="varcount" value="5"/>
+					<input type="button" value="Run simplex" onclick="run(true);"/>
+					<br/>
+					Enter constraints (variables from X1 to Xn):
+					<br/>
+					<textarea id="constraints" style="width: 100%; height: 600px">
+// X1 Hydroalcoholic gel bottle : 3$
+//    1 unit of plastic
+//    2 units chemical products
+
+// X2 Expendable gloves box : 8$
+//    2 unit of plastic
+//    1 units chemical products
+
+// X3 Surgery coat : 35$
+//   10 units of fabric
+
+// X4 Face masks (box of 5) : 6$
+//    3 units of fabric
+
+// X5 Face masks with visors (box of 5) : 14$
+//    3 units of fabric
+//    2 units of plastic
+
+// Plastic   : 100 units available
+// Chemicals :  60 units available
+// Fabric    : 150 units available
+   X1 + 2 X2 + 2 X5 <= 100
+ 2 X1 + 1 X2        <= 60
+10 X3 + 3 X4 + 3 X5 <= 150
+
+// Objective function
+Z = 3 X1 + 8 X2 + 35 X3 + 6 X4 + 14 X5
+					</textarea>
+				</td>
+				<td style="vertical-align: top">
+					<table id="matrix"></table>
+					<hr/>
+					<table id="results" style="text-align: left; width: 200px"></table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
