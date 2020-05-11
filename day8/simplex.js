@@ -12,7 +12,7 @@ function Constraint (coefficients, target, isEqual) {
 //     [= or <=]
 //     [target]
 function parseConstraint (str, varCount) {
-	var match1 = str.match(/^(( *[+-]? *[0-9]* *X[0-9]+)+) *(<=|=) *([0-9]+) *$/i);
+	var match1 = str.match(/^(( *[+-]? *[0-9]* *X[0-9]+)+) *(<=|=) *([+-]?[0-9]+) *$/i);
 	if(match1 == null) return null;
 	var equation = match1[1];
 	var symbol = match1[3];
@@ -23,7 +23,7 @@ function parseConstraint (str, varCount) {
 	//Use replace instead of matchAll (IE / Safari support...)
 	equation.replace(/ *([+-]?) *([0-9]*) *X([0-9]+)/gi, (m, sign, coeff, varname)=>{
 		var c = parseInt(coeff || 1);
-		if(sign.length == '-') c = -c;
+		if(sign == '-') c = -c;
 		coefficients[parseInt(varname)-1] += c;
 	});
 	return new Constraint(coefficients, target, symbol == '=');
@@ -48,7 +48,7 @@ function Simplex(varCount) {
 		for(var i=0; i<varCount; i++) coefficients.push(0);
 		str.replace(/ *([+-]?) *([0-9]*) *X([0-9]+)/gi, (m, sign, coeff, varname)=>{
 			var c = parseInt(coeff || 1);
-			if(sign.length == '-') c = -c;
+			if(sign == '-') c = -c;
 			coefficients[parseInt(varname)-1] += c;
 		});
 		this.setObjective(coefficients);
