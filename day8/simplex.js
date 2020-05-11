@@ -149,4 +149,11 @@ function Simplex(varCount) {
 		}
 		return base;
 	}
+	
+	this.getOptimum = function() { return this.matrix[this.constraints.length][this.totalVariableCount];}
+	
+	this.run = function() {
+		while(this.nextStep());
+		return this.getResults();
+	}
 }

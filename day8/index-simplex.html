@@ -27,10 +27,15 @@ function run(anim) {
 	
 	if(anim)
 		setTimeout(processNextStep, 1000);
+	else {
+		simplex.run();
+		showMatrix();
+		showResults();
+	}	
 }
 
 function processNextStep() {
-	document.getElementById('matrix').innerHTML = simplex.matrix.map((x,i)=>`<tr>${x.map((y,j)=>`<td id="cell_${i}_${j}">${y}</td>`).join('')}</tr>`).join('');
+	showMatrix();
 	var pivot = simplex.findPivot();
 	if(pivot == null) return showResults();
 	
@@ -48,23 +53,26 @@ function showPivotRow(row, col) {
     simplex.nextStep();
 	setTimeout(processNextStep, 1000);
 }
-
+function showMatrix() {
+	document.getElementById('matrix').innerHTML = simplex.matrix.map((x,i)=>`<tr>${x.map((y,j)=>`<td id="cell_${i}_${j}">${y}</td>`).join('')}</tr>`).join('');
+}
 function showResults() {
 	document.getElementById('results').innerHTML = 
 	   simplex.getResults().map((value, index) =>
 		`<tr>
   <td style="width: 150px">${index < simplex.variableCount ? 'Variable' : 'Slack variable'} X${index+1}</td>
   <td style="width: 50px">${value}</td>
-</tr>`).join('\n');
+</tr>`).join('\n') + `<tr><td>Max: </td><td>${simplex.getOptimum()}</td></tr>`;
 }
 		</script>
 	</head>
 	<body onload="run(true)">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 40%; text-align: left;">
+				<td style="width: 50%; text-align: left;">
 					Enter number of variables : <input type="text" id="varcount" value="5"/>
 					<input type="button" value="Run simplex" onclick="run(true);"/>
+					<input type="button" value="Run simplex (no animation)" onclick="run(false);"/>
 					<br/>
 					Enter constraints (variables from X1 to Xn):
 					<br/>
