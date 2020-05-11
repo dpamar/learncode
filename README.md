@@ -34,4 +34,10 @@ Compute the convex envelope, the smallest convex set containing a cloud of point
 ### The demo
 [Give a try](https://dpamar.github.io/learncode/day5/index-hull.html)
 
+## Day 6 - Chromatic polynomial
+### The problem
+Any map can be colored using 4 different colors so that 2 countries / regions connected use 2 different colors.
 
+The question is : how many configurations does it exist ?
+### The demo
+[Give a try](http://dpamar.github.io/learncode/day6/index-chromatic.html)
