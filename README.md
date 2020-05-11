@@ -41,3 +41,11 @@ Any map can be colored using 4 different colors so that 2 countries / regions co
 The question is : how many configurations does it exist ?
 ### The demo
 [Give a try](http://dpamar.github.io/learncode/day6/index-chromatic.html)
+
+## Day 7 - Prefix-free code, Morse, Huffman trees and Zip
+### The problem
+How to find a prefix-free code
+
+### The demo
+[A new Morse code generator](https://dpamar.github.io/learncode/day7/index-huffman.html) or a [basic zip algorithm](https://dpamar.github.io/learncode/day7/index-zip.html)
+
