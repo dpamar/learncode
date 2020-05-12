@@ -24,7 +24,7 @@ function LCS(a, b) {
 		if(i > 0 & j > 0 && this.str1[i-1] == this.str2[j-1]) {
 			this.diff(i-1, j-1);
 			this.subsequence += this.str1[i-1];
-			this.diffDetails.push(0);			this.diffDetails.push(0);
+			this.diffDetails.push(0);
 		} else if(j > 0 && (!i || this.matrix[i][j-1] >= this.matrix[i-1][j])) {
 			this.diff(i, j-1);
 			this.diffDetails.push(1);

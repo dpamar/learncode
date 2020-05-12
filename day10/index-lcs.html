@@ -1,0 +1,69 @@
+<html>
+	<head>
+		<title>Longest common subsequence</title>
+		<script src="lcs.js"></script>
+		<script>
+function refresh() {
+	var s1 = document.getElementById('text1').value;
+	var s2 = document.getElementById('text2').value;
+	var lcs = new LCS(s1,s2);
+
+	var setContent = (x, y) => document.getElementById(x).innerHTML = y.replace(/[\r\n]+/g,'<br/>');
+
+	setContent('common', lcs.getSubSequence());
+
+	var diff = lcs.getDiff();
+	var i1 = 0, i2 = 0;
+	var cmp1 = '', cmp2 = '';
+	for(var i=0; i<diff.length; i++) {
+		if(diff[i] == 0) {
+			cmp1 += s1[i1++];
+			cmp2 += s2[i2++];
+		} else if(diff[i] < 0) {
+			cmp1 += `<b style="color: red">${s1[i1++]}</b>`;
+		} else {
+			cmp2 += `<b style="color: red">${s2[i2++]}</b>`;
+		}
+	}
+	setContent('cmp1', cmp1);
+	setContent('cmp2', cmp2);
+
+}
+		</script>
+	</head>
+	<body onload="refresh();">
+		<table style="width: 100%; height: 100%">
+			<tr>
+				<td style="width: 50%">
+					<table style="height: 100%; width: 100%;">
+						<tr style="height: 2%"><td>Text 1:</td></tr>
+						<tr style="height: 48%">
+							<td>
+								<textarea id="text1" style="height: 100%; width: 100%" onkeyup="refresh();">ATATACAGTGGCGGACCTGTCATTAGCTGGAGAACGTGGGACATGGCCATGAACGGTGTGTTGCGGTCGACATGCTGCTT</textarea>
+							</td>
+						</tr>
+						<tr style="height: 2%"><td>Text 2:</td></tr>
+						<tr style="height: 48%">
+							<td>
+								<textarea id="text2" style="height: 100%; width: 100%" onkeyup="refresh();">ATATACAGTGACGGACCTGTCATTTTAGCTGGGAACTGGGACATCGCCCCGTGAACGGTGTGTTGGGTAGACATGGTCCTAAA</textarea>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td style="width: 50%">
+					<table style="height: 100%; width: 100%;">
+						<tr style="height: 30%; vertical-align: bottom;">
+							<td id="cmp1"></td>
+						</tr>
+						<tr style="height: 40%; vertical-align: center;">
+							<td id="common"></td>
+						</tr>
+						<tr style="height: 30%; vertical-align: top;">
+							<td id="cmp2"></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
