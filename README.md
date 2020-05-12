@@ -49,3 +49,10 @@ How to find a prefix-free code
 ### The demo
 [A new Morse code generator](https://dpamar.github.io/learncode/day7/index-huffman.html) or a [basic zip algorithm](https://dpamar.github.io/learncode/day7/index-zip.html)
 
+## Day 8 - Simplex
+### The problem
+Find an optimal solution on a constrained system.
+
+### The demo
+[Give a try](https://dpamar.github.io/learncode/day8/index-simplex.html)
+
