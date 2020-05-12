@@ -1,7 +1,6 @@
-function Node(id, prev,curr) {
+function Node(id, word) {
 	this.id = id;
-	this.previous = prev;
-	this.current = curr;
+	this.word = word;
 	this.nexts = {};
 	this.count = 0;
 	this.addNext= function(nextId) {
@@ -11,8 +10,8 @@ function Node(id, prev,curr) {
 	}
 }
 
-function ChatBot() {
-	
+function ChatBot(hist) {
+	this.historyDepth = hist;
 	this.nodes = [];
 	this.dictionary = {};
 
@@ -20,40 +19,45 @@ function ChatBot() {
 
 	this.addSentence = function(string) {
 		var words = string.split(/\s+/);
-		
-		var previous = '__START__';
+		var previous = [];
+		for(var i=0; i<this.historyDepth; i++) previous.push(`__START${i}__`);
 		var current = words.shift();
 
 		for(var currentNode = this.getNode(previous, current); words.length; currentNode = nextNode) {
-			previous = current;
+			previous.shift();
+			previous.push(current);
 			current = words.shift();
 			var nextNode = this.getNode(previous, current);
 			currentNode.addNext(nextNode.id);
 		}
-		previous = current;
+		previous.shift();
+		previous.push(current);
 		current = '__END__';
 		var nextNode = this.getNode(previous, current);
 		currentNode.addNext(nextNode.id);
 	}
 
 	this.getNode = function(previous, current) {
-		var first = this.dictionary[previous];
-		if(!first) this.dictionary[previous] = first = {};
-		var currentNode = first[current];
-		if(!currentNode) this.nodes.push(first[current] = currentNode = new Node(this.nodeCount++, previous, current));
+		var currentSource = this.dictionary;
+		previous.map(word => {
+			var next = currentSource[word];
+			if(!next) currentSource[word] = next = {};
+			currentSource = next;
+		});
+		var currentNode = currentSource[current];
+		if(!currentNode) this.nodes.push(currentSource[current] = currentNode = new Node(this.nodeCount++, current));
 		return currentNode;
 	}
 
 	this.talk = function() {
-		var startNode = this.dictionary['__START__'];
+		var startNode = this.dictionary;
+		for(var i=0; i<this.historyDepth; i++) startNode = startNode[`__START${i}__`];
 		var startWords = Object.keys(startNode);
 
-		var previous = '__START__';
 		var current = startNode[startWords[Math.floor(Math.random() * startWords.length)]];
-
 		var result = [];
-		while(current.current != '__END__') {
-			result.push(current.current);
+		while(current.word != '__END__') {
+			result.push(current.word);
 			var nextIndex = Math.floor(Math.random() * current.count);
 			var nextId;
 			for(var pairs = Object.entries(current.nexts),i=0; i<pairs.length; i++)

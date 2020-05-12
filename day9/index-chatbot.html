@@ -1,12 +1,12 @@
 <html>
 	<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<script src="chatbot.js"></script>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<script src="chatbot.js"></script>
 		<script>
 var cb;
 function learn() { 
-	cb = new ChatBot();
-	document.getElementById('trainset').value.split('\n').map(x=>cb.addSentence(x));
+	cb = new ChatBot(parseInt(document.getElementById('depth').value));
+	document.getElementById('trainset').value.split(/(\n|\.)/).map(x=>cb.addSentence(x));
 }
 
 function talk() { document.getElementById('chat').innerHTML += cb.talk() + '<br/><br/>';}
@@ -1061,6 +1061,7 @@ Pour l'application du présent article, la notion de groupe désigne le groupe f
 Le secteur d'activité permettant d'apprécier la cause économique du licenciement est caractérisé, notamment, par la nature des produits biens ou services délivrés, la clientèle ciblée, ainsi que les réseaux et modes de distribution, se rapportant à un même marché.
 Les dispositions du présent chapitre sont applicables à toute rupture du contrat de travail résultant de l'une des causes énoncées au présent article, à l'exclusion de la rupture conventionnelle visée aux articles L. 1237-11 et suivants et de la rupture d'un commun accord dans le cadre d'un accord collectif visée aux articles L. 1237-17 et suivants.</textarea>
 					<br/>
+					Depth: <input type="text" value="3" id="depth"/>
 					<input type="button" value="Learn" onclick="learn(); alert('Done');"/>
 					<input type="button" value="Talk" onclick="talk()"/>
 				</td>
