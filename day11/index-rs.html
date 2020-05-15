@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<title>Reed-solomon implementation</title>
+		<style>
+td,th {
+	border: solid black 1px;
+	width: 30px;
+	text-align: center;
+}
+
+td { width: 30px; }
+th { width: 150px; }
+
+table {
+	border-spacing : 0;
+	border-collapse : collapse;
+}
+		</style>
+		<script src="galois.js"></script>
+		<script src="polynomial.js"></script>
+		<script src="reedsolomon.js"></script>
+		<script>
+var galois = new Galois(8, 285); // x8 + x4 + x3 + x2 + 1
+var encoder = new ReedSolomonEncoder(galois, 0);
+var decoder = new ReedSolomonDecoder(galois, 0);
+
+function bytesRow (title, array, colorFunction, blanks) {
+	return '<tr><th>' + title + '</td>' +
+		array.map((x,i)=>'<td style="background-color: '+(colorFunction(x,i))+'">'+('0'+x.toString(16)).substr(-2).toUpperCase()+'</td>').join('') +
+		'<td></td>'.repeat(blanks) +
+		'</tr>';
+}
+
+function simulation() {
+	var cpCount = parseInt(document.getElementById('cpCount').value);
+	
+	var msg = [...document.getElementById('message').value];
+	var messageRow = '<tr><th>Message</th>' +
+	   msg.map(x=>'<td>'+x+'</td>').join('') +
+	   '<td></td><td></td>'.repeat(cpCount) +
+	   '</tr>';
+
+	var data = msg.map(x=>x.charCodeAt());
+	var dataRow = bytesRow('Data', data, ()=>'white', cpCount * 2);
+	
+	var dataEnc = encoder.encode(data, cpCount);
+	var encodedRow = bytesRow('Encoded', dataEnc, ()=>'white', 0);
+	
+	var noiseCount = cpCount;
+	var dataNoise = dataEnc.map(x=>x);
+	for(var i=0; i<noiseCount; i++) dataNoise[Math.floor(Math.random()*dataEnc.length)] = Math.floor(Math.random() * 256);
+	var noiseRow = bytesRow('Received', dataNoise, (x,i)=>x!=dataEnc[i]?'red':'lightgray', 0);
+	
+	var dataDec = decoder.decode(dataNoise, cpCount);
+	var dataDecRow = bytesRow('Decoded', dataDec[0], (x,i)=>x!=dataNoise[i]?'limegreen':'lightgray', cpCount * 2);
+	
+	var finalData = dataDec[0].map(x=>String.fromCharCode(x));
+	var finalRow = '<tr><th>Message</th>' +
+		finalData.map(x=>'<td>'+x+'</td>').join('') +
+		'<td></td><td></td>'.repeat(cpCount) +
+		'</tr>';
+	   
+	document.getElementById('simulation').innerHTML = messageRow + dataRow + encodedRow + noiseRow + dataDecRow + finalRow;
+}
+		</script>
+	</head>
+	<body onload="simulation()">
+		Maximal error count supported : <input type="text" style="width: 30px; text-align: right;" id="cpCount" value="5"/>
+		<br/>
+		<br/>
+		Enter message : <input onkeyup="simulation()" type="text" style="width: 500px;" id="message" value="Hello world ! How are you today ? I'm fine, thank you very much"/>
+		<hr/>
+		<table id="simulation">
+		</table>
+	</body>
+</html>
