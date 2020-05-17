@@ -56,3 +56,16 @@ Find an optimal solution on a constrained system.
 ### The demo
 [Give a try](https://dpamar.github.io/learncode/day8/index-simplex.html)
 
+# Day 9 - A simple chatbot
+## The problem
+How to develop a chatbot based on markov chain
+
+## The demo
+[Have a look at this french laws generator](https://dpamar.github.io/learncode/day9/index-chatbot.html)
+
+# Day 10 - Longest common subsequence
+## The problem
+How to measure "distance" between two strings (for diff, ...)
+
+## The demo
+[A DNA comparison tool](https://dpamar.github.io/learncode/day10/index-lcs.html)
