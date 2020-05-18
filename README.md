@@ -69,3 +69,10 @@ How to measure "distance" between two strings (for diff, ...)
 
 ## The demo
 [A DNA comparison tool](https://dpamar.github.io/learncode/day10/index-lcs.html)
+
+# Day 11 - Error detection and correction
+## The problem
+I need to make sure that my message is correctly sent, and be able to detect and fix issues if needed
+
+## The demo
+[Reed-Solomon code](https://dpamar.github.io/learncode/day11/index-rs.html)
