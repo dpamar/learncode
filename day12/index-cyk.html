@@ -21,6 +21,7 @@ function generateGrammar() {
 
 function parseText() {
 	var text = document.getElementById('text').value.match(/([a-zA-Z0-9]+|:=|[^ \n])/g).filter(x=>x.length != 0);
+	text.push(null);
 	var result = g.read(text);
 	var valid = result[text.length-1][0].filter(x=>x.source == 'S').length != 0;
 	document.getElementById('text').style.backgroundColor = valid ? 'greenyellow' : 'lightcoral';
@@ -34,10 +35,9 @@ function parseText() {
 					Enter grammar rules CNF (S: start, nonterminal => terminal or nonterminal => nonterminal1 nonterminal2)
 					<br/>
 					<textarea id="grammar" onkeyup="generateGrammar();" style="width: 400px; height: 700px">//Quick&Dirty language
-S => Instruction NextInstruction
-S => Instruction InstructionSeparator
-NextInstruction=> InstructionSeparator S
-InstructionSeparator => ;
+S => Instr S
+Instr => Instruction InstrSeparator
+InstrSeparator => ;
 
 //Declare
 Instruction => Declaration Label

@@ -1,6 +1,6 @@
 function GrammarRule(source, target1, target2) {
 	this.source = source;
-	if(target1.match(/^\/.*\/$/)) {
+	if(target1 && target1.match(/^\/.*\/$/)) {
 		this.target1 = eval(target1);
 		this.isRegex = true;
 	} else {
@@ -13,11 +13,11 @@ function GrammarRule(source, target1, target2) {
 
 function Grammar() {
 	this.rules = [];
-	this.terminalRules = [];
+	this.terminalRules = [new GrammarRule("S", null, null)];
 
 	this.addRule = (s, t1, t2) => (t2 == null ? this.terminalRules : this.rules).push(new GrammarRule(s, t1, t2));
 
-	this.getRulesByTerminal = t => this.terminalRules.filter(r => r.isRegex ? t.match(r.target1) : r.target1 == t);
+	this.getRulesByTerminal = t => t ? this.terminalRules.filter(r => r.isRegex ? t.match(r.target1) : r.target1 == t) : [this.terminalRules[0]];
 	this.getRulesByUnion = (set1, set2) => {
 		var list1 = set1.flatMap(t1 => this.rules.filter(r => r.target1 == t1));
 		return set2.flatMap(t2 => list1.filter(r => r.target2 == t2));
