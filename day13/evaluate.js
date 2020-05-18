@@ -1,4 +1,5 @@
-function Operator(priority, leftAssociativity, paramsCount, fct) {
+function Operator(symbol, priority, leftAssociativity, paramsCount, fct) {
+	this.symbol = symbol;
 	this.priority = priority;
 	this.leftAssociativity = leftAssociativity;
 	this.parametersCount = paramsCount;
@@ -7,7 +8,7 @@ function Operator(priority, leftAssociativity, paramsCount, fct) {
 
 function OperatorLibrary() {
 	this.operators = {};
-	this.addOperator = (symbol, prio, asso, pCount, fct) => this.operators[symbol] = new Operator(prio, asso, pCount, fct);
+	this.addOperator = (symbol, prio, asso, pCount, fct) => this.operators[symbol] = new Operator(symbol, prio, asso, pCount, fct);
 	this.findOperator = op => this.operators[op];
 	
 	this.constants = {};
@@ -27,10 +28,11 @@ function loadMaths(opLib) {
 	opLib.addConstant("e", Math.E);
 }
 
-function evaluate(tokens, opLibrary) {
+function evaluate(tokens, opLibrary, rpn) {
 	
 	var applyOperator = () => {
 		var op = opStack.shift();
+		if(rpn) { outputStack.push(op.symbol); return; }
 		var params = [];
 		for(var i=0; i<op.parametersCount; i++) params.unshift(outputStack.pop());
 		outputStack.push(op.evaluate(...params));

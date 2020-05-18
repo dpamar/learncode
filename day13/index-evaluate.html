@@ -4,15 +4,20 @@
 		<script src="evaluate.js"></script>
 		<script>
 var opLib = new OperatorLibrary();
+var rpnOnly = false;
 loadMaths(opLib);
-function run(text) {
+function run(raw) {
+	var text = raw.replace(/ *(\/\/.*)?$/,'');
 	var tokens = text.match(/([0-9]+|[a-z]+|[^ ])/gi);
-	return evaluate(tokens, opLib);
+	return tokens ? text + ' = ' + evaluate(tokens, opLib, rpnOnly) : raw;
 }
 
 function refresh() {
-	var input = document.getElementById('input').value.split('\n').map(x => x.replace(/ *(\/\/.*)?$/,''));
-	document.getElementById('output').value = input.map(x=> x + ' = ' + run(x)).join('\n');
+	rpnOnly = document.getElementById('rpn').checked;
+	document.getElementById('output').value = document.getElementById('input').value
+			.split('\n')
+			.map(run)
+			.join('\n');
 }
 
 		</script>
@@ -23,20 +28,35 @@ function refresh() {
 				<td style="width: 50%">
 					Enter formulas :
 					<br/>
-					<textarea id="input" style="width: 100%; height: 500px" onkeyup="refresh();">1+2      // = 3
+					<textarea id="input" style="width: 100%; height: 500px" onkeyup="refresh();">//Basic tests
+1+2      // = 3
 5-4      // = 1
 3*2      // = 6
 112/7    // = 16
+
+//Priorities
 5+3 * 4  // = 17
 6*3/2    // = 9
 6*3+2    // = 20
 6*3^3    // = 162
+
+//Associativity
 3^3*2    // = 54
 2^2^3    // = 256 (2^3 goes first => 2^8)
 2^8      // = 256 
+
+//Parenthesis
+3+4*2    // = 11
+(3+4)*2  // = 14
+((3+4)*2+5)*3 // = 57
+((3+4)*2+5)*((3+2)*2-1) // = 171
+
+//Constants
 3*pi/6   // = same as pi/2
 pi/2     // = 1.57...
 e^2      // = 7.389...</textarea>
+						<br/>
+						<input id="rpn" type="checkbox" onclick="refresh();">Show RPN steps only</input>
 				</td>
 				<td style="width: 50%">
 					Results :
