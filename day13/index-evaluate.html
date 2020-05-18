@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Grammar parser</title>
+		<title>Expression evaluation : Shunting-yard algorithm</title>
 		<script src="evaluate.js"></script>
 		<script>
 var opLib = new OperatorLibrary();
@@ -25,7 +25,7 @@ function refresh() {
 	<body onload="refresh();">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 50%">
+				<td style="width: 50%; vertical-align: top">
 					Enter formulas :
 					<br/>
 					<textarea id="input" style="width: 100%; height: 500px" onkeyup="refresh();">//Basic tests
@@ -58,7 +58,7 @@ e^2      // = 7.389...</textarea>
 						<br/>
 						<input id="rpn" type="checkbox" onclick="refresh();">Show RPN steps only</input>
 				</td>
-				<td style="width: 50%">
+				<td style="width: 50%; vertical-align: top">
 					Results :
 					<br/>
 					<textarea id="output" style="width: 100%; height: 500px" onkeyup="refresh();"></textarea>
