@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<title>Grammar parser</title>
+		<script src="evaluate.js"></script>
+		<script>
+var opLib = new OperatorLibrary();
+loadMaths(opLib);
+function run(text) {
+	var tokens = text.match(/([0-9]+|[a-z]+|[^ ])/gi);
+	return evaluate(tokens, opLib);
+}
+
+function refresh() {
+	var input = document.getElementById('input').value.split('\n').map(x => x.replace(/ *(\/\/.*)?$/,''));
+	document.getElementById('output').value = input.map(x=> x + ' = ' + run(x)).join('\n');
+}
+
+		</script>
+	</head>
+	<body onload="refresh();">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 50%">
+					Enter formulas :
+					<br/>
+					<textarea id="input" style="width: 100%; height: 500px" onkeyup="refresh();">1+2      // = 3
+5-4      // = 1
+3*2      // = 6
+112/7    // = 16
+5+3 * 4  // = 17
+6*3/2    // = 9
+6*3+2    // = 20
+6*3^3    // = 162
+3^3*2    // = 54
+2^2^3    // = 256 (2^3 goes first => 2^8)
+2^8      // = 256 
+3*pi/6   // = same as pi/2
+pi/2     // = 1.57...
+e^2      // = 7.389...</textarea>
+				</td>
+				<td style="width: 50%">
+					Results :
+					<br/>
+					<textarea id="output" style="width: 100%; height: 500px" onkeyup="refresh();"></textarea>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
