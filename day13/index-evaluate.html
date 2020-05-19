@@ -3,9 +3,9 @@
 		<title>Expression evaluation : Shunting-yard algorithm</title>
 		<script src="evaluate.js"></script>
 		<script>
-var opLib = new OperatorLibrary();
+var opLib;
+
 var rpnOnly = false;
-loadMaths(opLib);
 function run(raw) {
 	var text = raw.replace(/ *(\/\/.*)?$/,'');
 	var tokens = text.match(/([0-9]+|[a-z]+|[^ ])/gi);
@@ -13,6 +13,12 @@ function run(raw) {
 }
 
 function refresh() {
+	opLib = new OperatorLibrary();
+	loadMaths(opLib);
+
+	bool = document.getElementById('bool').checked;
+	if(bool) loadBool(opLib);
+	
 	rpnOnly = document.getElementById('rpn').checked;
 	document.getElementById('output').value = document.getElementById('input').value
 			.split('\n')
@@ -42,7 +48,7 @@ function refresh() {
 
 //Associativity
 3^3*2    // = 54
-2^2^3    // = 256 (2^3 goes first => 2^8)
+2^2^3    // = 256 (2^3 goes first so 2^8)
 2^8      // = 256 
 
 //Parenthesis
@@ -54,9 +60,27 @@ function refresh() {
 //Constants
 3*pi/6   // = same as pi/2
 pi/2     // = 1.57...
-e^2      // = 7.389...</textarea>
+e^2      // = 7.389...
+
+//Functions
+sin(pi/4) // same as below
+sqrt(2)/2 // same as above
+cos(pi/3) // = 1/2
+tan(pi/4) // = 1
+max(6*4-3, (2*6+8)/5 + 18)
+min(6*4-3, (2*6+8)/5 + 18)
+
+//Bool (if enabled)
+(4*3+12) &lt; 23     // 24 not less than 23
+(4*3+12) &lt; 23 + 2 // 24 less than 25
+(4*3+12) &gt; 23     // 24 greater than 23
+6! = 720             // 6! and 720 are equal
+6! ~ 5!              // 6! and 5! are different
+6! ~ 5!*6            // 6! and 5! * 6 are not different
+not(true)            // true : constant. Not: function</textarea>
 						<br/>
 						<input id="rpn" type="checkbox" onclick="refresh();">Show RPN steps only</input>
+						<input id="bool" type="checkbox" onclick="refresh();">Include boolean features to library</input>
 				</td>
 				<td style="width: 50%; vertical-align: top">
 					Results :
