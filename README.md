@@ -76,3 +76,27 @@ I need to make sure that my message is correctly sent, and be able to detect and
 
 ## The demo
 [Reed-Solomon code](https://dpamar.github.io/learncode/day11/index-rs.html)
+
+# Day 12 - Grammar parsing (CYK)
+## The problem
+I want to validate some text using my own grammar
+
+## The demo
+[Give a try to CYK parsing](https://dpamar.github.io/learncode/day12/index-cyk.html)
+
+# Day 13 - Evaluate expression and RPN
+## The problem
+How to evaluate an expression that contains operators, with respect to priorities ?
+
+(5+4) * 3+4 * 2 -8/2 * 5 = ? 
+
+## The demo
+[Algebric to RPN + Evaluator demo](https://dpamar.github.io/learncode/day13/index-evaluate.html)
+
+# Day 14 - Minimal automaton
+## The problem
+How to find the minimal deterministic automaton for a given task?
+
+## The demo
+[Convert any finite automaton to its minimal DFA](https://dpamar.github.io/learncode/day14/index-minimize.html)
+
