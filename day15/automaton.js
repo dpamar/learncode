@@ -208,9 +208,9 @@ function Automaton () {
 					}
 				}
 			}
+			currentPartition = newPartition;
 			if(partitionCount == newPartitionCount) break;
 			partitionCount = newPartitionCount;
-			currentPartition = newPartition;
 		}
 		//currentPartition : new state names (needs some cleansing)
 		//Now, recreate graph from these details
@@ -230,16 +230,13 @@ function Automaton () {
 		//Then, rebuild initial and final states, and clean partition index (avoid gaps)
 		var newInitials = [];
 		var newFinals = [];
-		var offset = 0;
 		var isDuplicate = [];
 		for(var i=0; i<currentPartition.length; i++) {
-			currentPartition[i] -= offset;
-			if(currentPartition[i] != i - offset) {
+			if(currentPartition[i] != i) {
 				// duplicate in partition
-				offset++; 
-				isDuplicate[i]         = true;
-				newInitials[i-offset] |= this.initials[i];
-				newFinals[i-offset]   |= this.finals[i];
+                                isDuplicate[i]                    = true;
+                                newInitials[currentPartition[i]] |= this.initials[i];
+                                newFinals[currentPartition[i]]   |= this.finals[i];
 			} else {
 				isDuplicate[i] = false;
 				newInitials.push(this.initials[i]);
