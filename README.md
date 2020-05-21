@@ -100,3 +100,10 @@ How to find the minimal deterministic automaton for a given task?
 ## The demo
 [Convert any finite automaton to its minimal DFA](https://dpamar.github.io/learncode/day14/index-minimize.html)
 
+# Day 15 - Automaton to regex
+## The problem
+How to write a regular expression based on a finite automaton, in order to match the same strings
+
+## The demo
+[Convert any finite automaton to a regex](https://dpamar.github.io/learncode/day15/index-automaton.html)
+
