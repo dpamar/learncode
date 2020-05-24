@@ -10,21 +10,25 @@ function KMeans(k, set, initPlusPlus) {
 
 	this.means = [];
 	if(initPlusPlus) {
-                //KMeans++ initialization:
-                //pick one center randomly (first one) from set
-                //for centers 2 to k :
-                //    for each point P, get D=min(distance(P), C) for C in available centers
-                //    get a random point from set with weighted probability D^2
+		//KMeans++ initialization:
+		//pick one center randomly (first one) from set
+		//for centers 2 to k :
+		//    for each point P, get D=min(distance(P), C) for C in available centers
+		//    get a random point from set with weighted probability D^2
 
-                this.means.push(this.set[Math.floor(Math.random()*this.set.length)]);
-                var distances = this.set.map((x, i)=>[i, x, 1/0]);
-
-                for(var i=1; i<k; i++) {
-                        var sum = 0;
-                        distances = distances.map(x => [x[0], x[1], sum += Math.min(x[2], this.distance(this.means[i-1], x[1]))]);
-                        var rnd = Math.random()*sum;
-                        this.means.push(distances.filter(x=>x[2]>=rnd)[0][1]);
-                }
+		this.means.push(this.set[Math.floor(Math.random()*this.set.length)].map(x=>x));
+		var distances = this.set.map(x=>1/0);
+		for(var i=1; i<k; i++) {
+			var sum = 0;
+			for(var j=0; j<this.set.length; j++) {
+				var d = this.distance(this.set[j], this.means[i-1]);
+				if(d < distances[j]) distances[j] = d;
+				sum += distances[j];
+			}
+			var rnd = Math.random()*sum;
+			for(var j=0; rnd > 0; j++) rnd -= distances[j];
+			this.means.push(this.set[j-1].map(x=>x));
+		}
 	} else {
 		for(var i=0; i<k; i++) this.means.push(this.set[Math.floor(Math.random()*this.set.length)].map(x=>x));
 	}
