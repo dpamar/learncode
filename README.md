@@ -107,3 +107,10 @@ How to write a regular expression based on a finite automaton, in order to match
 ## The demo
 [Convert any finite automaton to a regex](https://dpamar.github.io/learncode/day15/index-automaton.html)
 
+# Day 16 - K-means / K-means++
+## The problem
+How to classify data points into K categories
+
+## The demo
+[Give a try to Kmeans and KMeans++](https://dpamar.github.io/learncode/day16/index-kmeans.html)
+
