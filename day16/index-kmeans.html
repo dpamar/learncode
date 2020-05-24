@@ -12,7 +12,14 @@ var k = 50;
 var set = null;
 var kmeans = null;
 var kpp = false;
+var animation = true;
 var timeout = null;
+
+function switchAnimation() {
+	animation = !animation;
+	document.getElementById('animation').value = `${animation?'Disable':'Enable'} animation`;
+	generateSet();
+}
 
 function switchPP() {
 	kpp = !kpp;
@@ -25,7 +32,7 @@ function readInput() {
 	setSize = parseInt(document.getElementById('size').value) || 1000;
 }
 
-function generateNotSoRandomSet(skipAnimation) {
+function generateNotSoRandomSet() {
 	readInput();
 	if(timeout) clearTimeout(timeout);
         timeout = null;
@@ -45,10 +52,10 @@ function generateNotSoRandomSet(skipAnimation) {
 	
 	kmeans = new KMeans(k, set, kpp);
 	draw();
-	next(skipAnimation);
+	next(!animation);
 }
 
-function generateSet(skipAnimation) {
+function generateSet() {
 	readInput();
 	if(timeout) clearTimeout(timeout);
         canvas = document.getElementById('canvas');
@@ -58,7 +65,7 @@ function generateSet(skipAnimation) {
 		set.push([Math.random()*canvas.width, Math.random()*canvas.height]);
 	kmeans = new KMeans(k, set, kpp);
 	draw();
-	next(skipAnimation);
+	next(!animation);
 }
 
 function draw() {
@@ -94,8 +101,7 @@ function next(skipAnimation) {
 		and number of clusters : <input type="text" id="k" value="50" style="width: 40px; text-align: right;"/>
 		<input type="button" value="Go (full random)" onclick="generateSet();"/>
 		<input type="button" value="Go (cluster-like random)" onclick="generateNotSoRandomSet();"/>
-		<input type="button" value="Skip animation (full random)" onclick="generateSet(true);"/>
-		<input type="button" value="Skip animation (cluster-like random)" onclick="generateNotSoRandomSet(true);"/>
+		<input type="button" id="animation" value="Disable animation" onclick="switchAnimation();"/>
 		<input type="button" id="kpp" value="Switch to KMeans++ init mode" onclick="switchPP();"/>
 		<hr/>
 
