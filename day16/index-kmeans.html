@@ -39,11 +39,12 @@ function generateNotSoRandomSet(skipAnimation) {
 	var radius = 50;
 
 	for(var i=0; i<setSize; i++) {
-		var cluster = means[Math.floor(Math.random() * k)];
+		var cluster = means[i%k];
 		set.push([cluster[0] + (Math.random()-0.5) * radius*2, cluster[1] + (Math.random()-0.5) * radius*2]);
 	}
 	
 	kmeans = new KMeans(k, set, kpp);
+	draw();
 	next(skipAnimation);
 }
 
@@ -56,6 +57,7 @@ function generateSet(skipAnimation) {
 	for(var i=0; i<setSize; i++)
 		set.push([Math.random()*canvas.width, Math.random()*canvas.height]);
 	kmeans = new KMeans(k, set, kpp);
+	draw();
 	next(skipAnimation);
 }
 
@@ -76,8 +78,8 @@ function draw() {
 
 function next(skipAnimation) {
 	if(skipAnimation) while(kmeans.nextStep());
-	draw();
 	var running = kmeans.nextStep();
+	draw();
 	if(!running) {
         	ctx.fillStyle = 'rgb(0,255,255, 0.1)';
         	ctx.fillRect(0, 0, canvas.width, canvas.height);
