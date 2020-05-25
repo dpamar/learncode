@@ -114,3 +114,10 @@ How to classify data points into K categories
 ## The demo
 [Give a try to KMeans and KMeans++](https://dpamar.github.io/learncode/day16/index-kmeans.html)
 
+# Day 17 - Color wheel
+## The problem
+How to generate "distinct" colors - not too similar
+
+## The demo
+[Give a try](https://dpamar.github.io/learncode/day17/index-color.html)
+
