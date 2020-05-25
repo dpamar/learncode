@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<title>Color wheel</title>
+		<script src="color.js"></script>
+		<script>
+var canvas;
+var ctx;
+
+function go(count) {
+	canvas = document.getElementById('canvas');
+	ctx = canvas.getContext('2d');
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	
+	var lineCount = Math.ceil(Math.sqrt(count));
+	var heightCount = Math.ceil(count / lineCount);
+	
+	var margin = 10;
+	var w = canvas.width / lineCount - margin;
+	var h = canvas.height / heightCount - margin;
+	
+	var wheel = new ColorWheel(0, i => 1 - ~~(i/20)*10/count, i => 1 - ~~(i/30)*3/count);
+	
+	for(var i=0, x=0, y=0; i<count; ) {
+		ctx.fillStyle = 'rgb(' + wheel.getNext().join(',') + ')';
+		ctx.fillRect(x + margin / 2, y + margin / 2, w, h);
+		i++;
+		if(i%lineCount) {
+			x += w + margin;
+		} else {
+			x = 0;
+			y += h + margin;
+		}
+	}
+}
+
+		</script>
+	</head>
+	<body onload="go(500);">
+		Enter number of color to generate : 
+		<input type="text" id="count" value="500" onkeyup="go(parseInt(this.value))"></input>
+		<canvas id="canvas" width="1200" height="700"></canvas>
+	</body>
+</html>
