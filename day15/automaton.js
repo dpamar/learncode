@@ -315,9 +315,9 @@ function Automaton () {
 		for(var i = mat.length-1; i>=0; i--) {
 			//Nth state (index i)
 			var state = mat[i];
-			
+		
 			//One single pattern (null if no pattern at all, the single pattern if already only one, or (pattern1|pattern2|...) otherwise)
-			state = state.map(patterns => {
+			state = state.map((patterns, index) => {
 				if(patterns.length == 0) return null;
 				if(patterns.length == 1) return patterns[0];
 				return "(" + patterns.join('|') + ")";
@@ -325,20 +325,34 @@ function Automaton () {
 
 
 			//pNN is not null => update all pNX
-			if(state[i] != null) state = state.map(pattern => pattern && (state[i] + "*" + pattern));
+			if(state[i] != null) {
+				var loopRegex = state[i];
+				var adjustedLoopRegex = loopRegex;
+				if(loopRegex.length > 1) adjustedLoopRegex = "(" + loopRegex + ")";
+ 
+				state = state.map(pattern => pattern && (pattern == loopRegex ? adjustedLoopRegex + "+" :
+					pattern.substr(0, loopRegex.length + 1) == loopRegex + "*" ? loopRegex + "+" + pattern.substr(pattern.length + 1) :
+					adjustedLoopRegex + "*" + pattern));
+			}
 
 			//Update all pMN
 			for(var j=0; j<i; j++) {
 				if(mat[j][i].length == 0) continue;
 				var newPattern = mat[j][i].length == 1 ? mat[j][i][0] : "(" + mat[j][i].join('|') + ")";
-				state.map((pattern, index) => pattern && mat[j][index].push(newPattern + pattern));
+				state.map((pattern, index) => pattern && mat[j][index].push(
+					pattern.substr(0, newPattern.length + 1) == newPattern + "*" ? newPattern + "+" + pattern.substr(newPattern.length + 1) :
+					pattern.substr(0, newPattern.length + 3) == "(" + newPattern + ")*" ? newPattern + "+" + pattern.substr(newPattern.length + 3) :
+					newPattern + pattern));
 			}
 		}
 
 		//now pStartEnd contains our regex
 		var regexFinal = mat[0][mat.length-1];
 		if(regexFinal.length == 0) return '';
-		if(regexFinal.length == 1) return '/' + regexFinal[0] + '/';
-		return '/^(' + regexFinal.map(x=>x.substr(1, x.length-2)).join('|') + ')$/';
+		var result = '';
+		if(regexFinal.length == 1) result = '/' + regexFinal[0] + '/';
+		else result = '/^(' + regexFinal.map(x=>x.substr(1, x.length-2)).join('|') + ')$/';
+		result = result.replace(/(.+)\(\1\)\*/,(m,n)=>"(" + n + ")+");
+		return result;
 	}
 }
